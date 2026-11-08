@@ -1,0 +1,272 @@
+{
+  "schemaVersion": 1,
+  "id": "resend-mcp",
+  "kind": "provider-connector",
+  "artifactType": "connector",
+  "qualityVersion": 2,
+  "title": "Resend MCP server",
+  "description": "Inspect verified sending domains and explicitly submit a transactional email.",
+  "status": "ready",
+  "verification": "mock-only",
+  "releaseEligible": true,
+  "maintainer": "jannikco",
+  "license": "MIT",
+  "product": "pipmcp",
+  "appSlug": "resend",
+  "appName": "Resend",
+  "operationIds": [
+    "resend_list_domains",
+    "resend_send_email"
+  ],
+  "sourceRevision": "f48603cbbfe84f725477d7eece5b704cec41cc7d74c488313c99cc18738308ba",
+  "evidence": [
+    "Actual tools/call and direct-provider request contract tests"
+  ],
+  "provenance": [
+    "https://raw.githubusercontent.com/resend/resend-openapi/main/resend.yaml"
+  ],
+  "attributionSlug": "github-resend-mcp",
+  "connectorId": "resend",
+  "connector": {
+    "id": "resend",
+    "name": "Resend",
+    "version": "0.1.0",
+    "baseUrl": "https://api.resend.com",
+    "auth": {
+      "type": "bearer",
+      "env": "RESEND_API_KEY"
+    },
+    "tools": [
+      {
+        "name": "resend_list_domains",
+        "description": "List sending domains and inspect their verification status.",
+        "method": "GET",
+        "path": "/domains",
+        "readOnly": true,
+        "approvalRequired": false,
+        "inputSchema": {
+          "type": "object",
+          "properties": {},
+          "required": [],
+          "additionalProperties": false
+        },
+        "bindings": {
+          "path": [],
+          "query": {},
+          "body": {}
+        },
+        "sampleArguments": {},
+        "evidence": {
+          "state": "documented",
+          "providerLiveValidation": "not-run"
+        },
+        "provenance": [
+          "https://raw.githubusercontent.com/resend/resend-openapi/main/resend.yaml"
+        ]
+      },
+      {
+        "name": "resend_send_email",
+        "description": "Submit a single email; returned ID is not a delivery receipt.",
+        "method": "POST",
+        "path": "/emails",
+        "readOnly": false,
+        "approvalRequired": true,
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "from": {
+              "type": "string",
+              "format": "email"
+            },
+            "to": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "email"
+              },
+              "minItems": 1
+            },
+            "subject": {
+              "type": "string",
+              "minLength": 1
+            },
+            "text": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "from",
+            "to",
+            "subject",
+            "text"
+          ],
+          "additionalProperties": false
+        },
+        "bindings": {
+          "path": [],
+          "query": {},
+          "body": {
+            "from": "from",
+            "to": "to",
+            "subject": "subject",
+            "text": "text"
+          }
+        },
+        "sampleArguments": {
+          "from": "sender@example.com",
+          "to": [
+            "sandbox@example.com"
+          ],
+          "subject": "Authorized sandbox test",
+          "text": "Authorized test message."
+        },
+        "evidence": {
+          "state": "documented",
+          "providerLiveValidation": "not-run"
+        },
+        "provenance": [
+          "https://raw.githubusercontent.com/resend/resend-openapi/main/resend.yaml"
+        ]
+      }
+    ],
+    "workflow": {
+      "name": "Resend authorized workflow",
+      "description": "Inspect verified sending domains and explicitly submit a transactional email.",
+      "steps": [
+        "resend_list_domains",
+        "resend_send_email"
+      ]
+    },
+    "provenance": [
+      "https://raw.githubusercontent.com/resend/resend-openapi/main/resend.yaml"
+    ],
+    "sourceEvidence": {
+      "state": "documented",
+      "providerLiveValidation": "not-run",
+      "checkedAt": "2026-11-08",
+      "operationCount": 2,
+      "kind": "official-reference",
+      "sha256": "e706637116ab3cf6b3ca99854c4cab4933a193c607b2b18b9d79c0cb16c68dd8",
+      "sources": [
+        {
+          "url": "https://raw.githubusercontent.com/resend/resend-openapi/main/resend.yaml",
+          "sha256": "e706637116ab3cf6b3ca99854c4cab4933a193c607b2b18b9d79c0cb16c68dd8",
+          "checkedAt": "2026-11-08T13:11:26.683578+00:00"
+        }
+      ]
+    },
+    "setup": {
+      "requiresPipMcpAccount": false,
+      "credentialsHelpUrl": "https://raw.githubusercontent.com/resend/resend-openapi/main/resend.yaml",
+      "instructions": "Use your own scoped Resend API key and verified sender domain. Only send to recipients you are authorized to contact. Provider webhook events determine delivery, not the initial API ID."
+    },
+    "sampleWarning": "Example IDs and email addresses are placeholders. Replace them with records and recipients you are authorized to access. Samples do not authorize writes. HTTP/fixture success does not prove provider execution or email delivery.",
+    "appSlug": "resend",
+    "repoId": "resend-mcp",
+    "product": "pipmcp",
+    "artifactType": "connector",
+    "sourceRevision": "f48603cbbfe84f725477d7eece5b704cec41cc7d74c488313c99cc18738308ba",
+    "capabilityEvidence": {
+      "local": {
+        "level": "Tested",
+        "operations": [
+          {
+            "name": "resend_list_domains",
+            "level": "Tested",
+            "evidenceRefs": [
+              "Provider request/stdio contract tests"
+            ],
+            "method": "contract-fixture"
+          },
+          {
+            "name": "resend_send_email",
+            "level": "Tested",
+            "evidenceRefs": [
+              "Provider request/stdio contract tests"
+            ],
+            "method": "contract-fixture"
+          }
+        ],
+        "evidenceRefs": [
+          "Provider request/stdio contract tests"
+        ],
+        "mode": "local"
+      },
+      "managed": {
+        "level": "Documented",
+        "operations": [
+          {
+            "name": "resend_list_domains",
+            "level": "Documented",
+            "evidenceRefs": [],
+            "method": "documentation"
+          },
+          {
+            "name": "resend_send_email",
+            "level": "Documented",
+            "evidenceRefs": [],
+            "method": "documentation"
+          }
+        ],
+        "evidenceRefs": [],
+        "mode": "managed"
+      }
+    },
+    "managedAvailability": {
+      "status": "listed",
+      "checkedAt": "2026-11-08T13:20:45.156456+00:00"
+    }
+  },
+  "capabilityEvidence": {
+    "local": {
+      "level": "Tested",
+      "operations": [
+        {
+          "name": "resend_list_domains",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        },
+        {
+          "name": "resend_send_email",
+          "level": "Tested",
+          "evidenceRefs": [
+            "Provider request/stdio contract tests"
+          ],
+          "method": "contract-fixture"
+        }
+      ],
+      "evidenceRefs": [
+        "Provider request/stdio contract tests"
+      ],
+      "mode": "local"
+    },
+    "managed": {
+      "level": "Documented",
+      "operations": [
+        {
+          "name": "resend_list_domains",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        },
+        {
+          "name": "resend_send_email",
+          "level": "Documented",
+          "evidenceRefs": [],
+          "method": "documentation"
+        }
+      ],
+      "evidenceRefs": [],
+      "mode": "managed"
+    }
+  },
+  "utility": {
+    "problem": "Inspect verified sending domains and explicitly submit a transactional email.",
+    "output": "Actual provider API results through local MCP tools"
+  },
+  "providerDocs": "https://raw.githubusercontent.com/resend/resend-openapi/main/resend.yaml"
+}
