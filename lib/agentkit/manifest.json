@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "version": "1.0.0",
+  "product": "pipmcp",
+  "credential": "PIPMCP_API_KEY",
+  "skills": [
+    {
+      "name": "pipmcp-resend",
+      "description": "Connect AI agents to Resend using one PipMCP API key and actual hosted tool discovery."
+    }
+  ],
+  "files": {
+    "skills/pipmcp-resend/SKILL.md": "80635cdc80e0d359f4f9861a5b6368216e4b3d4f9b29b0fa09080bdd48c01b54"
+  }
+}
